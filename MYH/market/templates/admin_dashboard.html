@@ -1,0 +1,416 @@
+{% extends "layout.html" %}
+
+{% block title %}Admin Dashboard - User Management{% endblock %}
+
+{% block header_title %}Admin Dashboard{% endblock %}
+{% block header_subtitle %}Manage Users and Students{% endblock %}
+
+{% block additional_css %}
+<style>
+    .user-table {
+        box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .action-buttons .btn {
+        margin: 0 2px;
+    }
+    .search-container {
+        margin-bottom: 20px;
+    }
+    .filter-container {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+    .edit-modal .modal-header {
+        background-color: #007bff;
+        color: white;
+    }
+    .delete-modal .modal-header {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="content-container mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>User Management</h3>
+        <div class="btn-group">
+            <button class="btn btn-outline-secondary" id="showUsers">Users</button>
+            <button class="btn btn-outline-secondary" id="showStudents">Students</button>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="filter-container mb-4">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search by name, email">
+                    <button class="btn btn-primary" id="searchBtn">Search</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" id="roleFilter">
+                    <option value="">All Roles</option>
+                    <option value="admin">Admin</option>
+                    <option value="professor">Professor</option>
+                    <option value="user">Student</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Table Section -->
+    <div id="usersSection">
+        <div class="table-responsive user-table">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.email_address }}</td>
+                        <td>{{ user.role }}</td>
+                        <td class="action-buttons">
+                            <button class="btn btn-sm btn-primary edit-user-btn" data-id="{{ user.id }}" data-email="{{ user.email_address }}" data-role="{{ user.role }}">
+                                <i class="bi bi-pencil"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger delete-user-btn" data-id="{{ user.id }}" data-email="{{ user.email_address }}">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Students Table Section -->
+    <div id="studentsSection" style="display:none;">
+        <div class="table-responsive user-table">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Major</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="studentsTableBody">
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.Student_Id }}</td>
+                        <td>{{ student.Student_Name }}</td>
+                        <td>{{ student.Major }}</td>
+                        <td class="action-buttons">
+                            <button class="btn btn-sm btn-primary edit-student-btn" 
+                                data-id="{{ student.Student_Id }}" 
+                                data-name="{{ student.Student_Name }}" 
+                                data-major="{{ student.Major }}">
+                                <i class="bi bi-pencil"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger delete-student-btn" 
+                                data-id="{{ student.Student_Id }}" 
+                                data-name="{{ student.Student_Name }}">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination Section -->
+    <div class="d-flex justify-content-center mt-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if page > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('main.admin_dashboard', page=page-1) }}">Previous</a>
+                </li>
+                {% endif %}
+                
+                {% for i in range(1, pages + 1) %}
+                <li class="page-item {% if i == page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('main.admin_dashboard', page=i) }}">{{ i }}</a>
+                </li>
+                {% endfor %}
+                
+                {% if page < pages %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('main.admin_dashboard', page=page+1) }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade edit-modal" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm" action="{{ url_for('main.update_user') }}" method="POST">
+                    <input type="hidden" id="editUserId" name="user_id">
+                    
+                    <div class="mb-3">
+                        <label for="editEmail" class="col-form-label">Email:</label>
+                        <input type="email" class="form-control" id="editEmail" name="email_address" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="editRole" class="col-form-label">Role:</label>
+                        <select class="form-select" id="editRole" name="role" required>
+                            <option value="admin">Admin</option>
+                            <option value="professor">Professor</option>
+                            <option value="user">Student</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="editPassword" class="col-form-label">New Password (leave blank to keep current):</label>
+                        <input type="password" class="form-control" id="editPassword" name="password">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="editUserForm" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete User Confirmation Modal -->
+<div class="modal fade delete-modal" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteUserModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete user <span id="deleteUserEmail" class="fw-bold"></span>?</p>
+                <p class="text-danger">This action cannot be undone.</p>
+                
+                <form id="deleteUserForm" action="{{ url_for('main.delete_user') }}" method="POST">
+                    <input type="hidden" id="deleteUserId" name="user_id">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="deleteUserForm" class="btn btn-danger">Delete User</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Student Modal -->
+<div class="modal fade edit-modal" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editStudentModalLabel">Edit Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editStudentForm" action="{{ url_for('main.update_student') }}" method="POST">
+                    <input type="hidden" id="editStudentId" name="student_id">
+                    <input type="hidden" id="originalStudentId" name="original_student_id">
+                    
+                    <div class="mb-3">
+                        <label for="editStudentName" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="editStudentName" name="student_name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="editStudentMajor" class="col-form-label">Major:</label>
+                        <input type="text" class="form-control" id="editStudentMajor" name="major" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="editStudentForm" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Student Confirmation Modal -->
+<div class="modal fade delete-modal" id="deleteStudentModal" tabindex="-1" aria-labelledby="deleteStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteStudentModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete student <span id="deleteStudentName" class="fw-bold"></span>?</p>
+                <p class="text-danger">This action cannot be undone.</p>
+                
+                <form id="deleteStudentForm" action="{{ url_for('main.delete_student') }}" method="POST">
+                    <input type="hidden" id="deleteStudentId" name="student_id">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="deleteStudentForm" class="btn btn-danger">Delete Student</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Tab switching between users and students
+    document.getElementById('showUsers').addEventListener('click', function() {
+        document.getElementById('usersSection').style.display = 'block';
+        document.getElementById('studentsSection').style.display = 'none';
+        document.getElementById('showUsers').classList.add('active');
+        document.getElementById('showStudents').classList.remove('active');
+    });
+    
+    document.getElementById('showStudents').addEventListener('click', function() {
+        document.getElementById('usersSection').style.display = 'none';
+        document.getElementById('studentsSection').style.display = 'block';
+        document.getElementById('showUsers').classList.remove('active');
+        document.getElementById('showStudents').classList.add('active');
+    });
+    
+    // Edit user modal setup
+    const editUserBtns = document.querySelectorAll('.edit-user-btn');
+    editUserBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const userId = this.getAttribute('data-id');
+            const email = this.getAttribute('data-email');
+            const role = this.getAttribute('data-role');
+            
+            document.getElementById('editUserId').value = userId;
+            document.getElementById('editEmail').value = email;
+            document.getElementById('editRole').value = role;
+            document.getElementById('editPassword').value = '';
+            
+            const editUserModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+            editUserModal.show();
+        });
+    });
+    
+    // Delete user modal setup
+    const deleteUserBtns = document.querySelectorAll('.delete-user-btn');
+    deleteUserBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const userId = this.getAttribute('data-id');
+            const email = this.getAttribute('data-email');
+            
+            document.getElementById('deleteUserId').value = userId;
+            document.getElementById('deleteUserEmail').textContent = email;
+            
+            const deleteUserModal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
+            deleteUserModal.show();
+        });
+    });
+    
+    // Edit student modal setup
+    const editStudentBtns = document.querySelectorAll('.edit-student-btn');
+    editStudentBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const studentId = this.getAttribute('data-id');
+            const name = this.getAttribute('data-name');
+            const major = this.getAttribute('data-major');
+            
+            document.getElementById('editStudentId').value = studentId;
+            document.getElementById('originalStudentId').value = studentId;
+            document.getElementById('editStudentName').value = name;
+            document.getElementById('editStudentMajor').value = major;
+            
+            const editStudentModal = new bootstrap.Modal(document.getElementById('editStudentModal'));
+            editStudentModal.show();
+        });
+    });
+    
+    // Delete student modal setup
+    const deleteStudentBtns = document.querySelectorAll('.delete-student-btn');
+    deleteStudentBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const studentId = this.getAttribute('data-id');
+            const name = this.getAttribute('data-name');
+            
+            document.getElementById('deleteStudentId').value = studentId;
+            document.getElementById('deleteStudentName').textContent = name;
+            
+            const deleteStudentModal = new bootstrap.Modal(document.getElementById('deleteStudentModal'));
+            deleteStudentModal.show();
+        });
+    });
+    
+    // Filter functionality
+    document.getElementById('roleFilter').addEventListener('change', function() {
+        const selectedRole = this.value;
+        const userRows = document.querySelectorAll('#usersTableBody tr');
+        
+        userRows.forEach(row => {
+            const roleCell = row.querySelector('td:nth-child(3)');
+            if (!selectedRole || roleCell.textContent === selectedRole) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+    
+    // Search functionality
+    document.getElementById('searchBtn').addEventListener('click', function() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        
+        // Search in users table
+        const userRows = document.querySelectorAll('#usersTableBody tr');
+        userRows.forEach(row => {
+            const email = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            if (email.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        
+        // Search in students table
+        const studentRows = document.querySelectorAll('#studentsTableBody tr');
+        studentRows.forEach(row => {
+            const id = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+            const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            const major = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+            
+            if (id.includes(searchTerm) || name.includes(searchTerm) || major.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

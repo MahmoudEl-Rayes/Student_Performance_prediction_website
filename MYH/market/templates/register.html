@@ -1,0 +1,94 @@
+{% extends 'layout.html' %}
+{% block head %}
+  <!-- Font Awesome for eye icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endblock %}
+{% block title %}Register Page{% endblock %}
+
+{% block content %}
+<body class="text-center">
+  <div class="container">
+    <form method="POST" class="form-register mx-auto" style="color:white; max-width: 400px;">
+      {{ form.hidden_tag() }}
+      <img class="mb-4" src="{{ url_for('static', filename='logo.jpg') }}" alt="" width="150" height="150">
+      <h1 class="h3 mb-3 font-weight-normal text-indigo">
+        Please Create Your Account
+      </h1>
+
+      <div class="mb-3">
+        {{ form.email_address.label(class="form-label text-indigo") }}
+        {{ form.email_address(class="form-control", placeholder="Email Address", type="email") }}
+        {% for error in form.email_address.errors %}
+          <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3 position-relative">
+        {{ form.password.label(class="form-label text-indigo") }}
+        <div class="input-group">
+          {{ form.password(class="form-control", placeholder="Password", id="password", type="password") }}
+          <span class="input-group-text bg-white" style="cursor: pointer;" id="togglePassword">
+            <i class="fas fa-eye"></i>
+          </span>
+        </div>
+        {% for error in form.password.errors %}
+          <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3 position-relative">
+        {{ form.password_confirm.label(class="form-label text-indigo") }}
+        <div class="input-group">
+          {{ form.password_confirm(class="form-control", placeholder="Confirm Password", id="passwordConfirm", type="password") }}
+          <span class="input-group-text bg-white" style="cursor: pointer;" id="toggleConfirm">
+            <i class="fas fa-eye"></i>
+          </span>
+        </div>
+        {% for error in form.password_confirm.errors %}
+          <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.role.label(class="form-label text-indigo") }}
+        {{ form.role(class="form-control") }}
+        {% for error in form.role.errors %}
+          <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <div id="student-fields" style="display: none;" class="mb-3">
+        <input type="text" name="student_id" class="form-control mb-2" placeholder="Student ID">
+        <input type="text" name="major" class="form-control" placeholder="Major">
+      </div>
+
+      {{ form.submit(class="btn btn-lg btn-primary btn-block mt-3") }}
+    </form>
+  </div>
+
+  <script>
+    // Toggle student fields
+    const roleSelect = document.querySelector('select[name="role"]');
+    const studentFields = document.getElementById('student-fields');
+    roleSelect.addEventListener('change', () => {
+      studentFields.style.display = (roleSelect.value === 'user') ? 'block' : 'none';
+    });
+    if (roleSelect.value === 'user') studentFields.style.display = 'block';
+
+    // Password visibility toggles
+    function setupToggle(toggleId, inputId) {
+      const toggle = document.getElementById(toggleId);
+      const input = document.getElementById(inputId);
+      toggle.addEventListener('click', () => {
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        input.setAttribute('type', type);
+        const icon = toggle.querySelector('i');
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+      });
+    }
+    setupToggle('togglePassword', 'password');
+    setupToggle('toggleConfirm', 'passwordConfirm');
+  </script>
+</body>
+{% endblock %}

@@ -1,0 +1,179 @@
+{% extends "layout.html" %}
+
+{% block title %}
+About - Student Performance Predictor
+{% endblock %}
+
+{% block header_title %}
+About Our System
+{% endblock %}
+
+{% block header_subtitle %}
+Learn how our prediction model works
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="content-container">
+            <h2>About Student Performance Predictor</h2>
+
+            <section class="mb-5">
+                <h3>Our Mission</h3>
+                <p>The Student Performance Predictor was developed to help educators, students, and parents identify the factors that influence academic success and provide actionable insights for improvement. Our goal is to make education more data-driven and personalized, enabling better outcomes for all students.</p>
+            </section>
+
+            <section class="mb-5">
+                <h3>How It Works</h3>
+                <p>Our system uses machine learning algorithms trained on anonymized educational data to predict student performance based on various factors:</p>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Input Factors</h5>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                
+                                <li class="list-group-item">Study Hours Per Week</li>
+                                <li class="list-group-item">Extracurricular Activity Level</li>
+                                <li class="list-group-item">Sleep Hours</li>
+                                <li class="list-group-item">Social Hours Per Day</li>
+                                <li class="list-group-item">Physical Activity Hours Per Day</li>
+                                
+                                <li class="list-group-item">Stress Level</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Output Predictions</h5>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Previous GPA/Academic Performance</li>
+                                
+                                <li class="list-group-item">Performance Level Classification</li>
+                                <li class="list-group-item">Personalized Recommendations</li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mb-5">
+                <h3>Our Model</h3>
+                <p>The prediction model powering our system is based on supervised machine learning techniques. It was trained on a dataset of over 10,000 student records with known outcomes, allowing it to identify patterns and relationships between various factors and academic performance.</p>
+
+                <p>Key features of our model include:</p>
+                <ul>
+                    <li>Accuracy rate of over 85% in predicting final grades</li>
+                    <li>Regular retraining with new data to maintain relevance</li>
+                    <li>Subject-specific optimization for more precise predictions</li>
+                    <li>Interpretable results that explain which factors most influenced the prediction</li>
+                </ul>
+            </section>
+
+            <section class="mb-5">
+                <h3>Data Privacy</h3>
+                <p>We take data privacy seriously. All student information entered into our system is:</p>
+                <ul>
+                    <li>Used solely for generating predictions</li>
+                    <li>Stored securely with industry-standard encryption</li>
+                    <li>Never shared with third parties</li>
+                    <li>Anonymized when used for model improvement</li>
+                </ul>
+            </section>
+
+            <section class="mb-5">
+                <h3>Research Background</h3>
+                <p>Our prediction model is based on extensive research in educational data mining and learning analytics. The system incorporates findings from multiple studies that have identified key predictors of academic success across different educational contexts.</p>
+
+                <p>The methodology combines traditional statistical approaches with modern machine learning techniques to provide predictions that are both accurate and interpretable.</p>
+            </section>
+
+           <section>
+                <h3>Team</h3>
+                <p>The Student Performance Predictor was developed by a team of educators, data scientists, and software engineers committed to improving educational outcomes through data-driven insights.</p>
+
+                <!-- Team Members Section -->
+                <div class="row justify-content-center mt-4">
+                    <div class="col-lg-10">
+                        <div class="row text-center">
+                            <!-- Team Member 1 -->
+                            <div class="col-md-4 col-sm-6 mb-4">
+                                <div class="team-member">
+                                    <div class="team-photo-container">
+                                        <img src="/api/placeholder/150/150" alt="Team Member 1" class="team-photo rounded-circle">
+                                    </div>
+                                    <h5 class="mt-3 mb-1">Member Name 1</h5>
+                                    <p class="text-muted small">Role/Title</p>
+                                </div>
+                            </div>
+
+                            <!-- Team Member 2 -->
+                            <div class="col-md-4 col-sm-6 mb-4">
+                                <div class="team-member">
+                                    <div class="team-photo-container">
+                                        <img src="/api/placeholder/150/150" alt="Team Member 2" class="team-photo rounded-circle">
+                                    </div>
+                                    <h5 class="mt-3 mb-1">Member Name 2</h5>
+                                    <p class="text-muted small">Role/Title</p>
+                                </div>
+                            </div>
+
+                            <!-- Team Member 3 -->
+                            <div class="col-md-4 col-sm-6 mb-4">
+                                <div class="team-member">
+                                    <div class="team-photo-container">
+                                        <img src="/api/placeholder/150/150" alt="Team Member 3" class="team-photo rounded-circle">
+                                    </div>
+                                    <h5 class="mt-3 mb-1">Member Name 3</h5>
+                                    <p class="text-muted small">Role/Title</p>
+                                </div>
+                            </div>
+
+                            <!-- Team Member 4 -->
+                            <div class="col-md-4 col-sm-6 mb-4 offset-md-2">
+                                <div class="team-member">
+                                    <div class="team-photo-container">
+                                        <img src="/api/placeholder/150/150" alt="Team Member 4" class="team-photo rounded-circle">
+                                    </div>
+                                    <h5 class="mt-3 mb-1">Member Name 4</h5>
+                                    <p class="text-muted small">Role/Title</p>
+                                </div>
+                            </div>
+
+                            <!-- Team Member 5 -->
+                            <div class="col-md-4 col-sm-6 mb-4">
+                                <div class="team-member">
+                                    <div class="team-photo-container">
+                                        <img src="/api/placeholder/150/150" alt="Team Member 5" class="team-photo rounded-circle">
+                                    </div>
+                                    <h5 class="mt-3 mb-1">Member Name 5</h5>
+                                    <p class="text-muted small">Role/Title</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('main.predict_form') }}" class="btn btn-primary">Make a Prediction</a>
+                    <div class="btn-group ms-2">
+    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        Contact Us
+    </button>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="mailto:abodyelneel14@gmail.com">Email: abodyelneel14@gmail.com</a></li>
+        <li><a class="dropdown-item" href="tel:+201118501103">Phone: +20 111 850 1103</a></li>
+    </ul>
+</div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

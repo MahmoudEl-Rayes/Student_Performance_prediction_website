@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Home - Student Performance Predictor
+{% endblock %}
+
+{% block header_title %}Student Performance Prediction{% endblock %}
+{% block header_subtitle %}Predict academic performance based on student factors{% endblock %}
+
+{% block additional_css %}
+<style>
+    .feature-card {
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+        height: 100%;
+        transition: transform 0.3s;
+    }
+    .feature-card:hover {
+        transform: translateY(-5px);
+    }
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    .cta-section {
+        background-color: #f8f9fa;
+        padding: 3rem 0;
+        margin: 2rem 0;
+        border-radius: 8px;
+    }
+    .chart-container {
+        height: 300px;
+        margin: 2rem 0;
+    }
+    .welcome-section .row {
+        align-items: center;
+    }
+    .logo-img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-5 welcome-section">
+    <div class="col-md-8">
+        <div class="content-container">
+            <h2>Welcome to the Student Performance Predictor</h2>
+            <p class="lead">Our system uses advanced machine learning models to predict student academic performance based on various factors such as study habits, previous performance, lifestyle, and more.</p>
+            <p>This tool can help educators, students, and parents identify areas for improvement and develop targeted strategies to enhance academic success.</p>
+            <div class="mt-4">
+                <a href="{{ url_for('main.predict_form') }}" class="btn btn-primary btn-lg">Make a Prediction</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-center">
+        <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Logo" class="logo-img">
+    </div>
+</div>
+
+<h3 class="text-center mb-4">Key Features</h3>
+<div class="row mb-5">
+    <div class="col-md-4 mb-4">
+        <div class="feature-card bg-light">
+            <div class="text-center text-primary feature-icon">📊</div>
+            <h4 class="text-center">Accurate Predictions</h4>
+            <p>Our model has been trained on extensive academic data to provide accurate performance predictions based on multiple factors.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="feature-card bg-light">
+            <div class="text-center text-success feature-icon">💡</div>
+            <h4 class="text-center">Personalized Recommendations</h4>
+            <p>Receive tailored suggestions on how to improve performance based on your specific student profile.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="feature-card bg-light">
+            <div class="text-center text-warning feature-icon">📈</div>
+            <h4 class="text-center">Track Progress</h4>
+            <p>Monitor improvement over time by comparing predictions and identifying trends in performance factors.</p>
+        </div>
+    </div>
+</div>
+
+<div class="cta-section text-center">
+    <div class="container">
+        <h3>Ready to improve academic performance?</h3>
+        <p class="lead">Start by making your first prediction and get personalized recommendations.</p>
+        <a href="{{ url_for('main.predict_form') }}" class="btn btn-primary btn-lg mt-3">Get Started Now</a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="content-container">
+            <h3 class="text-center mb-4">How It Works</h3>
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <ol class="fs-5">
+                        <li class="mb-3">Enter student information including study habits, attendance, and previous performance</li>
+                        <li class="mb-3">Our machine learning model analyzes the data and calculates a prediction</li>
+                        <li class="mb-3">Review the predicted performance score and level</li>
+                        <li class="mb-3">Get personalized recommendations for improvement</li>
+                    </ol>
+                </div>
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='h.png') }}" alt="How it works illustration" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block additional_js %}
+<script>
+    // JavaScript for any interactive elements can be added here
+</script>
+{% endblock %}
